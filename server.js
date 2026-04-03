@@ -8,8 +8,22 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",           // local frontend
+  process.env.FRONTEND_URL           // deployed frontend (optional)
+];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, // ✅ FIXED
+  origin: function (origin, callback) {
+    // allow requests with no origin (like Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 };
