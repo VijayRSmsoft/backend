@@ -8,7 +8,12 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://backend-3xfr.onrender.com', // Replace with your frontend URL
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11) choke on 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/users", require("./routes/userRoutes"));
