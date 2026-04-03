@@ -9,7 +9,7 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: 'https://backend-3xfr.onrender.com', // Replace with your frontend URL
+  origin: 'http:localhost:5173', // Replace with your frontend URL
   optionsSuccessStatus: 200 // Some legacy browsers (IE11) choke on 204
 };
 
