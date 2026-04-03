@@ -9,8 +9,9 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: 'http:localhost:5173', // Replace with your frontend URL
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11) choke on 204
+  origin: "http://localhost:5173", // ✅ FIXED
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
