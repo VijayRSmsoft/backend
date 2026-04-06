@@ -21,12 +21,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     maxlength: 500,
   },
-  active:{
-    type:Boolean,
-    default:true
+  active: {
+    type: Boolean,
+    default: true
+  },
+  userId: {
+    type: String
   }
-}, {
+}, 
+{
   timestamps: true
-});
+}
+);
 
 module.exports = mongoose.model("User", userSchema);
