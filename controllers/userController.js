@@ -26,16 +26,16 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  console.log("erqqq", req.params)
+
   const users = await User.findOne({ userId: req.params.id })
-  console.log("users", users)
+
   try {
     const updatedUser = await User.findOneAndUpdate(
       { userId: req.params.id },
       { $set: req.body },
       { new: true, runValidators: true }
     );
-    console.log("updated user", updatedUser)
+
     res.json(updatedUser);
   } catch (eror) {
     res.status(500).json({ error: error.message });
@@ -43,10 +43,10 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  console.log("req", req.params.id)
+
   try {
     const deletedUser = await User.findOneAndDelete({ userId: req.params.id });
-    console.log("deleteduser", deletedUser)
+
     res.json(deletedUser)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -54,16 +54,38 @@ exports.deleteUser = async (req, res) => {
 }
 
 // exports.filterUsers = async (req, res) => {
-
 //   const users = await User.find()
-//   let ss= req.body;
-//   const d = users.filter((a) => (a.name.includes(ss)))
-//   console.log(d)
-
-
-//   const s = users.filter((a) => (a.active))
-//   console.log("data", s)
-
+//   let { input, active } = req.query;
+//   if (input) {
+//     const inputFilter = users.filter((a) => a.name.includes(input))
+//     if (active == true) {
+//       const inputActiveFilter = inputFilter.filter((a) => a.active)
+//       return res.json(inputActiveFilter)
+//     } else {
+//       return res.json(inputFilter)
+//     }
+//   } else if (active == true) {
+//     const activeFilter = users.filter((a) => a.active);
+//     return res.json(activeFilter);
+//   }
+//   res.json(users);
 // }
+
+exports.filterUsers = async (req, res) => {
+  try {
+    let { input, active } = req.query;
+    const query = {};
+    if (input) {
+      query.name = { $regex: input, $options: "i" }; // case-insensitive
+    }
+    if (active !== undefined) {
+      query.active = active === "true"; // convert string to boolean
+    }
+    const users = await User.find(query);
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
