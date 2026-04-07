@@ -1,8 +1,7 @@
-const { response } = require("express");
 const { v4: uuidv4 } = require("uuid")
 const User = require("../models/user");
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res) => { //need to check already the user is there are not valid mail check active while crete true we 
   try {
     let userId = uuidv4()
     let body = {
@@ -15,8 +14,16 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.getUserById = async (req, res) => {
+  try {
+    const users = await User.findOne({ userId: req.params.id })
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res) => { //ok
   try {
     const users = await User.find();
     res.json(users);
@@ -26,9 +33,7 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-
-  const users = await User.findOne({ userId: req.params.id })
-
+  // const users = await User.findOne({ userId: req.params.id })
   try {
     const updatedUser = await User.findOneAndUpdate(
       { userId: req.params.id },
@@ -43,16 +48,13 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-
   try {
     const deletedUser = await User.findOneAndDelete({ userId: req.params.id });
-
     res.json(deletedUser)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 }
-
 // exports.filterUsers = async (req, res) => {
 //   const users = await User.find()
 //   let { input, active } = req.query;
@@ -70,16 +72,19 @@ exports.deleteUser = async (req, res) => {
 //   }
 //   res.json(users);
 // }
-
 exports.filterUsers = async (req, res) => {
   try {
-    let { input, active } = req.query;
+    let { input, active, role } = req.query;
     const query = {};
     if (input) {
       query.name = { $regex: input, $options: "i" }; // case-insensitive
     }
     if (active !== undefined) {
-      query.active = active === "true"; // convert string to boolean
+      // query.active = active === "true";  convert string to boolean
+      query.active =  active === "true";
+    }
+    if (role) {
+      query.role = role.replace(/"/g, "").toUpperCase();  
     }
     const users = await User.find(query);
     res.json(users);

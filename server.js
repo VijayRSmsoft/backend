@@ -32,6 +32,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/users", require("./routes/userRoutes"));
+// app.use("/api/product",require(".routes/productRoutes"))
 
 app.get("/", (req, res) => {
   res.send("API Running");

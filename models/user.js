@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["USER", "ADMIN", "MANAGER"],
-    default: "user",
+    default: "USER",
   },
   description: {
     type: String,
@@ -28,10 +28,10 @@ const userSchema = new mongoose.Schema({
   userId: {
     type: String
   }
-}, 
-{
-  timestamps: true
-}
+},
+  {
+    timestamps: true
+  }
 );
 
 module.exports = mongoose.model("User", userSchema);
