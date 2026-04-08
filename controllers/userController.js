@@ -22,10 +22,14 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
-
-exports.getUsers = async (req, res) => { //ok
+exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    let { page , size } = req.query;
+    page = parseInt(page);
+    if(page === 0){page++}
+    size = parseInt(size);
+    const skip = (page - 1) * size;
+    const users = await User.find().skip(skip).limit(size);
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
